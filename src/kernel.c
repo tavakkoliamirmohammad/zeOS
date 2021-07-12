@@ -54,7 +54,12 @@ void print(const char *str) {
 
 void kernel_main() {
     terminal_initialize();
-    print("Hello World!\nGood Bye!");
+    print("Welcome to ZeOS\n");
+
     kheap_init();
+
     idt_init();
+
+    enable_interrupt();
+
 }
