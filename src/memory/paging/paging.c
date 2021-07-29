@@ -30,7 +30,7 @@ void paging_switch_directory(paging_table_entry *directory) {
 }
 
 bool paging_is_address_aligned(void *ptr) {
-    return ((uint32_t) ptr % PAGING_ENTRIES_SIZE) == 0
+    return ((uint32_t) ptr % PAGING_ENTRIES_SIZE) == 0;
 }
 
 int paging_get_indexes(void *virtual_address, uint32_t *directory_index_out, uint32_t *table_index_out) {

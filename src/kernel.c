@@ -72,17 +72,6 @@ void kernel_main() {
     paging_switch_directory(paging_4gb_chunk_get_directory(paging4GbChunk));
     enable_paging();
 
-    char *ptr = kzalloc(4096);
-    paging_set(paging_4gb_chunk_get_directory(paging4GbChunk), 0x2000,
-               (uint32_t) ptr | PAGING_ACCESS_WRITABLE | PAGING_PRESENT | PAGING_ACCESS_ALL);
-
-    char *ptr2 = 0x2000;
-    ptr2[0] = 'A';
-    ptr2[1] = 'B';
-
-    print(ptr2);
-    print(ptr);
-
     enable_interrupt();
 
 }
