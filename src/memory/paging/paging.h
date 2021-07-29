@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define PAGING_CACHE_DISABLED      0b00010000
 #define PAGING_CACHE_WRITE_THROUGH 0b00001000
@@ -26,6 +27,8 @@ paging_table_entry *paging_4gb_chunk_get_directory(struct paging_4gb_chunk *chun
 void paging_switch_directory(paging_table_entry *directory);
 
 void enable_paging();
+
+int paging_set(paging_table_entry *directory, void *virtual_address, uint32_t value);
 
 
 #endif //KERNEL_PAGING_H
