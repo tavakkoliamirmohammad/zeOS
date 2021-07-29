@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include "idt/idt.h"
 #include "memory/heap/kheap.h"
+#include "memory/paging/paging.h"
 
 uint16_t *video_memory = 0;
 uint16_t terminal_row = 0;
@@ -52,6 +53,8 @@ void print(const char *str) {
     }
 }
 
+static struct paging_4gb_chunk *paging4GbChunk;
+
 void kernel_main() {
     terminal_initialize();
     print("Welcome to ZeOS\n");
@@ -60,6 +63,12 @@ void kernel_main() {
 
     idt_init();
 
+    // Create paging chunk
+    paging4GbChunk = new_paging_4gb_chunk(
+            PAGING_ACCESS_WRITABLE | PAGING_PRESENT | PAGING_ACCESS_ALL);
+
+    paging_switch_directory(paging_4gb_chunk_get_directory(paging4GbChunk));
+    enable_paging();
     enable_interrupt();
 
 }
