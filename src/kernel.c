@@ -66,6 +66,9 @@ void kernel_main() {
     // Initialize Interrupt Descriptor Table
     idt_init();
 
+    // Search and initialize the disk
+    disk_search_and_initialize();
+
     // Create paging chunk
     paging4GbChunk = new_paging_4gb_chunk(
             PAGING_ACCESS_WRITABLE | PAGING_PRESENT | PAGING_ACCESS_ALL);
