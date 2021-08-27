@@ -1,7 +1,12 @@
 #include "disk.h"
 #include "../io/io.h"
+#include "../memory/memory.h"
+#include "../config.h"
+#include "../status.h"
 
-int disk_read_sector(int lba, int total_sectors, void *buf) {
+struct disk disk;
+
+int disk_read_sector(unsigned int lba, unsigned int total_sectors, void *buf) {
     outb(0x1F6, lba >> 24 | 0xE0); // Select master and send low 8 bit of LBA
     outb(0x1F2, (unsigned char) total_sectors);// Send the sector count
     outb(0x1F3, (unsigned char) lba && 0xFF); // Send the low 8 bits of the LBA
@@ -23,4 +28,22 @@ int disk_read_sector(int lba, int total_sectors, void *buf) {
         }
     }
     return 0;
+}
+
+void disk_search_and_initialize() {
+    memset(&disk, 0, sizeof(disk));
+    disk.type = ZEOS_DISK_TYPE_REAL;
+    disk.sector_size = ZEOS_DISK_SECTOR_SIZE;
+}
+
+struct disk *get_disk(unsigned int index) {
+    if (index != 0)
+        return 0;
+    return &disk;
+}
+
+int read_block_disk(struct disk *selected_disk, unsigned int lba, unsigned int total_sectors, void *buf) {
+    if (selected_disk != &disk)
+        return -EIO;
+    return disk_read_sector(lba, total_sectors, buf);
 }
