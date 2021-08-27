@@ -4,8 +4,7 @@
 #include "idt/idt.h"
 #include "memory/heap/kheap.h"
 #include "memory/paging/paging.h"
-#include <stddef.h>
-#include <stdint.h>
+#include "disk/disk.h"
 
 uint16_t *video_memory = 0;
 uint16_t terminal_row = 0;
@@ -61,17 +60,23 @@ void kernel_main() {
     terminal_initialize();
     print("Welcome to ZeOS\n");
 
+    // Initialize heap
     kheap_init();
 
+    // Initialize Interrupt Descriptor Table
     idt_init();
 
     // Create paging chunk
     paging4GbChunk = new_paging_4gb_chunk(
             PAGING_ACCESS_WRITABLE | PAGING_PRESENT | PAGING_ACCESS_ALL);
 
+    // Switch to kernel paging
     paging_switch_directory(paging_4gb_chunk_get_directory(paging4GbChunk));
+
+    // Enable Paging
     enable_paging();
 
+    // Enable System Interrupts
     enable_interrupt();
 
 }
